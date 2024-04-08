@@ -1,1 +1,1 @@
-from modeling.models import *
+from payment_optimizer.modeling import models

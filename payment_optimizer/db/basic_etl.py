@@ -1,5 +1,5 @@
-from sql_interactions import SqlHandler
-from logger import CustomFormatter
+from payment_optimizer.db.sql_interactions import SqlHandler
+from payment_optimizer.db.logger import CustomFormatter
 import pandas as pd
 import os
 

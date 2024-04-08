@@ -1,9 +1,8 @@
 import pathlib
-import setuptools
+from setuptools import setup, find_packages
 
-setuptools.setup(
+setup(
     name="payment_optimizer",
-    version="0.1",
     description="Optimizing the payment process of e-commerce",
     long_description=pathlib.Path("README.md").read_text(),
     long_description_content_type="text/markdown",
@@ -14,5 +13,7 @@ setuptools.setup(
     ],
     python_requires=">=3.10, <3.12", 
     install_requires=["requests", "pandas>=2.0"],
-    packages=["Documents", "payment_optimizer"]
+    packages=find_packages(include=["Documents", "payment_optimizer", 'payment_optimizer.*', 'test', 'tests.*']),
+    version = "0.4.0"
+
 )
