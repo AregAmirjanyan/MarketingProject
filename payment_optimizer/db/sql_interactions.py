@@ -240,6 +240,51 @@ class SqlHandler:
         
         logger.info(f"Records deleted successfully from '{self.table_name}'.")
 
+    def get_table_data(self, columns: list = None, condition: str = None) -> pd.DataFrame:
+        if columns is None:
+            columns = self.get_table_columns()
+
+        if not columns:
+            return pd.DataFrame()
+
+        column_names = ', '.join(columns)
+
+        query = f"SELECT {column_names} FROM {self.table_name}"
+        if condition:
+            query += f" WHERE {condition}"
+
+        data = pd.read_sql_query(query, self.cnxn)
+        return data
+
    
+    def get_data_for_model(self) -> pd.DataFrame:
+        query = f"""
+            SELECT
+            t.transaction_id,
+            t.user_id,
+            t.payment_method_id,
+            t.rating_id,
+            t.status,
+            t.type,
+            t.shipping_address,
+            tp.product_id,
+            tp.quantity,
+            tp.date,
+            p.product_name,
+            p.brand,
+            p.price
+        FROM
+            Transaction t
+        JOIN
+            TransactionProduct tp ON t.transaction_id = tp.transaction_id
+        JOIN
+            Product p ON tp.product_id = p.product_id
+        """
+        self.cursor.execute(query)
+        rows = self.cursor.fetchall()
+        columns = [desc[0] for desc in self.cursor.description]
+        data = pd.DataFrame(rows, columns=columns)
+        logger.info(f'Selected data for modeling.')
+        return data   
         
 
