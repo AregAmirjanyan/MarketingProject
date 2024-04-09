@@ -1,14 +1,14 @@
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List
 from fastapi.responses import HTMLResponse
 from payment_optimizer.db.sql_interactions import SqlHandler
-from typing import Optional, TypeVar
+from typing import Optional, TypeVar, Type
 from datetime import date
+import logging
 
 
-
-# using pydamic to extend BaseModel
+# using pydantic to extend BaseModel
 
 class user(BaseModel):
     user_id: int
@@ -56,7 +56,16 @@ class transaction_product(BaseModel):
 
 
 
+
 app = FastAPI()
+
+
+
+tables = ['user', 'rating', 'payment_method', 'transactions', 'product', 'transaction_product']
+
+
+
+
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root():
@@ -103,29 +112,48 @@ async def read_root():
     """
 
 
-
-tables = ['user', 'rating', 'payment_method', 'transactions', 'product', 'transaction_product'] 
-
+# GET
 def select_n_rows(table):
 
-    @app.get(f"/{table}s")
-    def select_n_rows(n:int):        
+    @app.get(f"/{table}s",  response_model=dict)
+    def select_n_rows(n: int):        
         instance = SqlHandler('e_commerce', table)
         data = instance.get_entries(n)
         return {'data': data.to_dict(orient="records")}
 
 
 
-#error here
-@app.post("/users")
-def create_user(new_user: user):
-    instance = SqlHandler('e_commerce', 'user')
-    instance.insert_one(new_user)
-    return {"data": "user created successfully"} # raise to be implemented
 
-""" 
+# POST
+def create_entry(table:str):
+    model_class = globals()[table]
+    
+    @app.post(f"/{table}s/create", response_model=dict)
+    def create_entry(new_entry: model_class):
+
+        table_instance = SqlHandler('e_commerce', table)
+        table_instance.insert_one(dict(new_entry))
+        return {"data": "user created successfully"} # raise to be implemented
+
+
+# UPDATE
+
+def update_table(table:str):
+    model_class = globals()[table]
+
+    @app.put(f"/{table}/update")
+    def update_table(condition_col:str, condition_val:str, new_values: model_class):
+        condition = f'{condition_col} = {condition_val}'
+
+        handler = SqlHandler('e_commerce', table)
+        handler.update_table(condition, dict(new_values))
+        return {"message": f"Table {table} updated successfully."}
+
+
+
 for table in tables:
-    select_n_rows(table) """
-
+    select_n_rows(table) 
+    create_entry(table)
+    update_table(table)
 
 

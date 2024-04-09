@@ -44,11 +44,19 @@ class SqlHandler:
         columns = ', '.join(record.keys())
         placeholders = ', '.join(['?' for _ in record])
         query = f"INSERT INTO {self.table_name} ({columns}) VALUES ({placeholders})"
+        
+        # Log the SQL query for debugging
+        logger.info(f"Executing SQL query: {query}")
 
         # Execute the query
-        self.cursor.execute(query, list(record.values()))
-        self.cnxn.commit()
-        logger.info("Record inserted successfully.")
+        try:
+            self.cursor.execute(query, list(record.values()))
+            self.cnxn.commit()
+            logger.info("Record inserted successfully.")
+        except Exception as e:
+            logger.error(f"Error inserting record: {e}")
+            self.cnxn.rollback()
+            raise
 
 
     def get_table_columns(self)->list:
