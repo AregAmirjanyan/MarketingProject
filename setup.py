@@ -9,7 +9,7 @@ setup(
     description="Optimizing the payment process of e-commerce", 
     long_description=pathlib.Path("README.md").read_text(), 
     long_description_content_type="text/markdown", 
-    author="Elen Sukiasyan, Nane Mambreyan, Areg Amirjanyan, Gayane Ohanjanyan, Hasmik Sahakyan", 
+    author="Nane Mambreyan, Areg Amirjanyan, Gayane Ohanjanyan, Hasmik Sahakyan", 
     license="MIT", 
     classifiers=[ 
         "Development Status :: 3 - Alpha" 
