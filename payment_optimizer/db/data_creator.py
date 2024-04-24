@@ -9,8 +9,8 @@ NUMBER_OF_TRANSACTIONS = 5000
 NUMBER_OF_USERS = 2000
 NUMBER_OF_PRODUCTS = 1000
 current_directory = os.getcwd()
-parent_directory = os.path.dirname(current_directory)
-target_directory = os.path.join(parent_directory, 'data')
+#parent_directory = os.path.dirname(current_directory)
+target_directory = os.path.join(current_directory, 'data')
 
 # Function to write data to CSV file only if it doesn't exist
 def write_to_csv(data, csv_file_path):

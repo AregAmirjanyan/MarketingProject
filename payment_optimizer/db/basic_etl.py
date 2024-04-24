@@ -3,10 +3,12 @@ from payment_optimizer.db.logger import CustomFormatter
 import pandas as pd
 import os
 
+current_directory = os.getcwd()
+#parent_directory = os.path.dirname(current_directory)
+parent_dir = os.path.join(current_directory)
 
-
-current_dir = os.path.dirname(os.path.realpath(__file__))
-parent_dir = os.path.abspath(os.path.join(current_dir, '..'))
+#current_dir = os.path.dirname(os.path.realpath(__file__))
+#parent_dir = os.path.abspath(os.path.join(current_dir, '..'))
 
 
 

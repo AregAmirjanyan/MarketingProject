@@ -30,6 +30,7 @@ class User(Base):
     last_name = Column(String)
     email = Column(String) 
     phone_number = Column(String)
+    db_view = Column(String)
     
     
 class Rating(Base):
@@ -56,7 +57,8 @@ class Transaction(Base):
     status = Column(String) ####????????
     type = Column(String)
     shipping_address = Column(String)
-    
+    explored_bandit_type = Column(String)
+
     r_user = relationship("User")
     r_paymentmethod = relationship("PaymentMethod")
     r_rating = relationship("Rating")

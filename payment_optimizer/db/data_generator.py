@@ -17,8 +17,9 @@ def generate_User(user_id):
         "first_name": fake.first_name(),
         "last_name": fake.last_name(),
         "phone_number": fake.phone_number(),
-        "email": fake.email() 
-           }    
+        "email": fake.email(),
+        "db_view": "denied"
+        }    
 
 def generate_Product(product_id):
     return {
@@ -29,7 +30,7 @@ def generate_Product(product_id):
                                        "Bailey Corp", "Ramirez Ltd.", "Simmons and Sons", "Powell Group",
                                        "Washington Inc.", "Martinez Enterprises", "Lee Co.", "Perry and Sons",
                                        "Gonzalez Corp", "Russell Ltd.", "Butler Group", "Diaz and Sons")),
-        "price": round(random.uniform(1.0, 3000.0), 2)
+        "price": round(random.uniform(1.0, 2500.0), 2)
     }
 
 
@@ -55,19 +56,36 @@ def generate_TransactionProduct(product_id, transaction_id):
     return {
         "transaction_id": transaction_id,
         "product_id": product_id,
-        "quantity": round(random.uniform(1.0, 20.0)), 
+        "quantity": round(random.uniform(1.0, 10.0)), 
         "date": date
     }
 
+
+
 def generate_Transaction(transaction_id, user_id, payment_method_id, rating_id):
+    type_options = ["pre-payment", "post-payment"]
+    status_options = ["purchased", "returned", "canceled"]
+
+    type_choice = fake.random_element(elements=type_options)
+    status_choice = fake.random_element(elements=status_options)
+
+    # Assigning explored_bandit_type based on the transaction type
+    if type_choice == "pre-payment":
+        # Assign to bandit A with 30% probability
+        explored_bandit_type = "bandit B" if random.random() < 0.3 else "bandit A"
+    else:
+        # Assign to bandit B for post-payment transactions
+        explored_bandit_type = "bandit B"
+
     return {
         "transaction_id": transaction_id,
         "user_id": user_id,
         "payment_method_id": payment_method_id,
         "rating_id": rating_id,
-        "status": fake.random_element(elements=("purchased", "returned", "canceled")),
-        "type": fake.random_element(elements=("pre-payment", "post-payment")),
-        "shipping_address": fake.address()
+        "status": status_choice,
+        "type": type_choice,
+        "shipping_address": fake.address(),
+        "explored_bandit_type": explored_bandit_type
     }
 
 

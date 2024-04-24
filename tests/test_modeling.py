@@ -1,11 +1,13 @@
-
 from payment_optimizer.modeling.models import *
-
+import os
+import sys
 
 
 # Example usage:
 if __name__ == "__main__":
-    data_connect = DatabaseConnector('e_commerce')
+    parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    db_path = os.path.join(parent_dir, 'e_commerce')
+    data_connect = DatabaseConnector(db_path)
     data_connect.join_tables()
     
     #Testing A/B test
@@ -18,18 +20,4 @@ if __name__ == "__main__":
     res = ab_test.results()
     print(res)
 
-    # Testing ModelBuilder
-    print('---------------Testing ModelBuilder')
-    model_builder = ModelBuilder(data_connect)
-    data = model_builder.preprocess_data()
-
-    # Spliting data into features (X) and target variable (y) and traning
-    X = data[['payment_method_id', 'quantity', 'price']]
-    y = data['rating_id']
-    model_builder.train_model(X, y)
-
-    # Making predictions and adding to dataframe
-    predictions = model_builder.predict(X)
-    print(predictions)
-
-    #data['predictions'] = predictions
+    
