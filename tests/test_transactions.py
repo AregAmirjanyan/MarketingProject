@@ -41,9 +41,9 @@ data_new_product = {
 
 test2 = CRUD_Check('product')
 test2.create(data_new_product)
-test2.update("product_id = 1001", "product_name", "Iphone 14 PRO")
-test2.delete("product_id = 1001")
-test2.read(100, 'product_id')
+#test2.update("product_id = 1001", "product_name", "Iphone 15 PRO MAX")
+#test2.delete("product_id = 1002")
+#test2.read(100, 'product_id')
 test2.end_operation()
 
 

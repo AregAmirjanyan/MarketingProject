@@ -64,7 +64,7 @@ class ABTesting():
         else:
             self.result = "Fail to reject the null hypothesis. There is not sufficient evidence to suggest that Revenue Bandit A < Revenue Bandit B."
     
-
+        
     def results(self):
         ab_test_results = {'Model': "A/B Testing",
                                         't_stat': self.t_stat,

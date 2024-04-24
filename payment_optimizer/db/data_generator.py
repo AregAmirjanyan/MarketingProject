@@ -49,8 +49,8 @@ def generate_Rating(rating_id):
     }
 
 def generate_TransactionProduct(product_id, transaction_id):
-    start_date = datetime(2020, 1, 1)
-    end_date = datetime(2023, 12, 31)
+    start_date = datetime(2022, 1, 1)
+    end_date = datetime(2024, 4, 30)
     date = fake.date_time_between_dates(start_date, end_date)
 
     return {
@@ -61,18 +61,17 @@ def generate_TransactionProduct(product_id, transaction_id):
     }
 
 
-
 def generate_Transaction(transaction_id, user_id, payment_method_id, rating_id):
-    type_options = ["pre-payment", "post-payment"]
-    status_options = ["purchased", "returned", "canceled"]
+    type_options = ["pre-payment"] * 55 + ["post-payment"] * 45  # Adjust the distribution
+    status_options = ["purchased"] * 75 + ["canceled"] * 15 + ["returned"] * 10
 
     type_choice = fake.random_element(elements=type_options)
-    status_choice = fake.random_element(elements=status_options)
+    status_choice = random.choice(status_options)
 
     # Assigning explored_bandit_type based on the transaction type
     if type_choice == "pre-payment":
-        # Assign to bandit A with 30% probability
-        explored_bandit_type = "bandit B" if random.random() < 0.3 else "bandit A"
+        # Assign to bandit A with 40% probability
+        explored_bandit_type = "bandit B" if random.random() < 0.35 else "bandit A"
     else:
         # Assign to bandit B for post-payment transactions
         explored_bandit_type = "bandit B"
@@ -87,6 +86,5 @@ def generate_Transaction(transaction_id, user_id, payment_method_id, rating_id):
         "shipping_address": fake.address(),
         "explored_bandit_type": explored_bandit_type
     }
-
 
 
