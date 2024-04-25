@@ -86,7 +86,7 @@ class TransactionProduct(Base):
 
 
 class ABTestingResults(Base): 
-    tablename = "a_b_testing_results" 
+    __tablename__ = "a_b_testing_results" 
  
     result_id = Column(Integer, primary_key=True) 
     start_date = Column(DATE) 

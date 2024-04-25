@@ -42,11 +42,22 @@ if __name__ == "__main__":
     # Create a DataFrame from the results
     a_b_testing_results = pd.DataFrame([res_1, res_2, res_3])
     print(a_b_testing_results)
+    a_b_testing_results['message'] = a_b_testing_results['message'].astype(str)
+    print(a_b_testing_results.dtypes)
+    # Generate sequential IDs
+    a_b_testing_results['result_id'] = range(1, len(a_b_testing_results) + 1)
 
 
-    #results_to_db = SqlHandler('e_commerce', 'a_b_testing_results')
+    data_path = os.path.join(parent_dir, 'data')
+    result_path = os.path.join(data_path, 'a_b_testing_results.csv')
+    a_b_testing_results.to_csv(result_path, index=False) 
 
-    #results_to_db.insert_many(a_b_testing_results)
-    #results_to_db.close_cnxn()
+
+    res_handler=SqlHandler(db_path, 'a_b_testing_results')
+    res_data = pd.read_csv(result_path)
+
+    res_handler.insert_many(res_data)
+    res_handler.close_cnxn()
+
 
     

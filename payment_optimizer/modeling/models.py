@@ -83,7 +83,7 @@ class ABTesting():
             if self.last_date is None:
                 return
             # Increment the end_date by one day to include the end_date itself
-            self.last_date += timedelta(days=1)
+            #self.last_date += timedelta(days=1)
             self.control_group = self.control_group[self.control_group['date'] <= self.last_date]
             self.treatment_group = self.treatment_group[self.treatment_group['date'] <= self.last_date]
 
@@ -104,11 +104,12 @@ class ABTesting():
         
     def results(self):
         ab_test_results = {
-            'Start Date': self.first_date,
-            'End Date': self.last_date,
-            't_stat': self.t_stat,
+            'start_date': self.first_date,
+            'end_date': self.last_date,
+            't_test': self.t_stat,
             'p_value': self.p_value,
-            'Message': self.result
+            'message': self.result,
+            'test_date': datetime.now()
         }
         #print(self.result)
         return ab_test_results
