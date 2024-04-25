@@ -257,6 +257,56 @@ class SqlHandler:
         return data
 
    
-  
+
+    def inner_join(self, table2: str, key1: str, key2: str) -> pd.DataFrame:
+        query = f"""
+            SELECT *
+            FROM {self.table_name} t1
+            INNER JOIN {table2} t2 
+            ON t1.{key1} = t2.{key2}
+        """
+        return self._execute_query(query)
+
+    def left_join(self, table2: str, key1: str, key2: str) -> pd.DataFrame:
+        query = f"""
+            SELECT *
+            FROM {self.table_name} t1
+            LEFT JOIN {table2} t2 
+            ON t1.{key1} = t2.{key2}
+        """
+        return self._execute_query(query)
+
+    def right_join(self, table2: str, key1: str, key2: str) -> pd.DataFrame:
+        query = f"""
+            SELECT *
+            FROM {self.table_name} t1
+            RIGHT JOIN {table2} t2
+            ON t1.{key1} = t2.{key2}
+        """
+        return self._execute_query(query)
+
+    def full_outer_join(self, table2: str, key1: str, key2: str) -> pd.DataFrame:
+        query = f"""
+            SELECT *
+            FROM {self.table_name} t1
+            FULL OUTER JOIN {table2} t2 
+            ON t1.{key1} = t2.{key2}
+        """
+        return self._execute_query(query)
+    
+
+
+    def get_transactions_by_user_id(self, user_id: int) -> pd.DataFrame:
+        query = f"""
+            SELECT *
+            FROM transactions
+            WHERE user_id = {user_id}
+        """
+        return pd.read_sql_query(query, self.cnxn)
+    
+    
+
+
+
         
 

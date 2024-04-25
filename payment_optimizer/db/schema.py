@@ -82,6 +82,19 @@ class TransactionProduct(Base):
 
     r_product = relationship("Product")
     r_transaction = relationship("Transaction")
+
+
+
+class ABTestingResults(Base):
+    tablename = "a_b_testing_results"
+
+    result_id = Column(Integer, primary_key=True)
+    start_date = Column(DATE)
+    end_date = Column(DATE)
+    t_test = Column(Float)
+    p_value = Column(Float)
+    message = Column(String)
+    test_date = Column(DateTime, default=datetime.now)
     
 """     
 if __name__ == "__main__":
