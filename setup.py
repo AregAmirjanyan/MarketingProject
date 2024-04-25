@@ -2,7 +2,7 @@ import pathlib
 from setuptools import setup, find_packages 
  
 with open("requirements.txt") as f: 
-    install_requires = f.read().splitlines() 
+    reqs = f.read().splitlines() 
  
 
 setup( 
@@ -15,8 +15,8 @@ setup(
     classifiers=[ 
         "Development Status :: 3 - Alpha" 
     ], 
-    python_requires=">=3.10, <3.12",  
-    install_requires=install_requires, 
+    python_requires=">=3.8.2, <3.12",  
+    install_requires=reqs, 
     packages=find_packages(include=["Documents", "payment_optimizer", 'payment_optimizer.*', 'test', 'tests.*']), 
     version = "0.4.0" 
  

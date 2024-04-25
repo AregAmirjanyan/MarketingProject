@@ -1,4 +1,4 @@
 start_date,end_date,t_test,p_value,message,test_date,result_id
-2022-01-01 07:12:56,2024-04-29 18:29:31,-2.921594801331582,0.0017546274110552883,Reject the null hypothesis. There is sufficient evidence to suggest that Revenue Bandit A < Revenue Bandit B.,2024-04-25 19:39:23.304097,1
-2022-07-04 00:00:00,2024-04-29 18:29:31,-2.6213593914870548,0.00440780404082672,Reject the null hypothesis. There is sufficient evidence to suggest that Revenue Bandit A < Revenue Bandit B.,2024-04-25 19:39:23.321052,2
-2022-02-04 00:00:00,2023-04-30 00:00:00,-2.907215958135102,0.00184887710977648,Reject the null hypothesis. There is sufficient evidence to suggest that Revenue Bandit A < Revenue Bandit B.,2024-04-25 19:39:23.339006,3
+2022-01-01 04:08:21.446784,2024-04-29 22:58:12.376630,-1.5865255069679964,0.05636422466756774,Fail to reject the null hypothesis. There is not sufficient evidence to suggest that Revenue Bandit A < Revenue Bandit B.,2024-04-25 23:31:37.383733,1
+2022-07-04 00:00:00.000000,2024-04-29 22:58:12.376630,-0.7277463117813592,0.23342178876209274,Fail to reject the null hypothesis. There is not sufficient evidence to suggest that Revenue Bandit A < Revenue Bandit B.,2024-04-25 23:31:37.438633,2
+2022-02-04 00:00:00.000000,2023-04-30 00:00:00.000000,-1.2698716637665985,0.10216433124191775,Fail to reject the null hypothesis. There is not sufficient evidence to suggest that Revenue Bandit A < Revenue Bandit B.,2024-04-25 23:31:37.460152,3

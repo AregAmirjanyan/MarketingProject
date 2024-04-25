@@ -256,7 +256,10 @@ class SqlHandler:
         data = pd.read_sql_query(query, self.cnxn)
         return data
 
-   
+    def _execute_query(self, query: str) -> pd.DataFrame:
+        logger.info(f"Executing SQL query: {query}")
+        data = pd.read_sql_query(query, self.cnxn)
+        return data
 
     def inner_join(self, table2: str, key1: str, key2: str) -> pd.DataFrame:
         query = f"""
