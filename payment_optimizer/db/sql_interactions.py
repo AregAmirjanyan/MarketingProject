@@ -117,6 +117,17 @@ class SqlHandler:
             logger.warning('All rows already exist in the database. No new records inserted.')
             return
 
+        '''
+        # Hash password column if it exists
+        if 'password' in columns:
+            password_index = columns.index('password')
+            for index, row in enumerate(values_to_insert):
+                hashed_password = pwd_context.hash(row[password_index])
+                row = list(row)
+                row[password_index] = hashed_password
+                values_to_insert[index] = tuple(row)
+        '''
+
         # Construct SQL query for insertion
         cols = ', '.join(columns)  # Comma-separated column names
         params = ', '.join(['?' for _ in columns])  # Comma-separated placeholders for values
@@ -307,7 +318,33 @@ class SqlHandler:
         """
         return pd.read_sql_query(query, self.cnxn)
     
-    
+
+    def search_products(self, **kwargs):
+        query = "SELECT * FROM product WHERE "
+        conditions = []
+        values = []
+
+        for key, value in kwargs.items():
+            if value is not None:
+                conditions.append(f"{key} LIKE ?")
+                values.append(f"%{value}%")  # Using LIKE operator for partial matches
+
+        if conditions:
+            query += " OR ".join(conditions)
+            self.cursor.execute(query, tuple(values))
+            rows = self.cursor.fetchall()
+            if not rows:
+                return []
+            else:
+                # Convert each row tuple to a dictionary
+                columns = [col[0] for col in self.cursor.description]
+                results = []
+                for row in rows:
+                    result_dict = dict(zip(columns, row))
+                    results.append(result_dict)
+                return results
+        else:
+            return []
 
 
 

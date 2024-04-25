@@ -1,73 +1,23 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field
+from fastapi import FastAPI, HTTPException, status, Depends
+from fastapi.security import  OAuth2PasswordRequestForm
 from typing import List
 from fastapi.responses import HTMLResponse
-from payment_optimizer.db.sql_interactions import SqlHandler
-from typing import Optional, TypeVar, Type
-from datetime import date
-import logging
-
-
-# using pydantic to extend BaseModel
-
-class user(BaseModel):
-    user_id: int
-    password: str
-    first_name: str
-    last_name:str
-    email:str
-    phone_number: Optional[str] = None
-
-
-    
-class rating(BaseModel):
-    rating_id: int
-    description: Optional[str] = None
-
-
-class payment_method(BaseModel):
-    payment_method_id: int
-    method_name: str
-
-
-class transactions(BaseModel):
-    transaction_id: int
-    user_id: int
-    payment_method_id: int
-    rating_id : int
-    status: str
-    type: Optional[str] = None
-    shipping_address: Optional[str] = None
-    
-
-class product(BaseModel):
-    product_id: int
-    product_name: str
-    brand: Optional[str] = None
-    price: float
-    
-TDate = TypeVar('TDate', bound=date)
-class transaction_product(BaseModel):
-    transaction_id: int
-    product_id: int
-    quantity: Optional[int] = None ##??? AREG ???
-    date: Optional[TDate] = None
+from payment_optimizer.db.sql_interactions import SqlHandler, logger
+#from passlib.context import CryptContext
+from . import schemas
+from typing import Optional
+from . import utils as u
+from . import granted_user_required
+from . import auth_required
 
 
 
 
-
-app = FastAPI()
-
-
-
-tables = ['user', 'rating', 'payment_method', 'transactions', 'product', 'transaction_product']
+app = FastAPI(title = 'PayOpt')
 
 
 
-
-
-@app.get("/", response_class=HTMLResponse)
+@app.get("/", response_class=HTMLResponse, tags=["Root"])
 async def read_root():
     return """
     <html>
@@ -97,6 +47,7 @@ async def read_root():
                     text-decoration: none;
                     transition: background-color 0.3s ease;
                     margin-top: 20px;
+                    margin-right: 10px; /* Added margin to separate buttons */
                 }
                 .secondary-button:hover {
                     background-color: #0056b3;
@@ -106,54 +57,61 @@ async def read_root():
         </head>
         <body>
             <h1>Welcome to My API</h1>
-            <a href="/docs" class="secondary-button">Swagger</a>
+            <a href="/docs" class="secondary-button">Swagger UI</a>
+            <a href="/redoc" class="secondary-button">ReDoc</a> <!-- Added Redoc button -->
         </body>
     </html>
     """
 
 
-# GET
-def select_n_rows(table):
-
-    @app.get(f"/{table}s",  response_model=dict)
-    def select_n_rows(n: int):        
-        instance = SqlHandler('e_commerce', table)
-        data = instance.get_entries(n)
-        return {'data': data.to_dict(orient="records")}
 
 
 
 
-# POST
-def create_entry(table:str):
-    model_class = globals()[table]
+
+
+
+@app.post("/login", tags=['Default'])
+def login(user_credentails: OAuth2PasswordRequestForm = Depends()):
+    handler = SqlHandler('e_commerce', 'user')
+    user = handler.select_row('email', user_credentails.username)
+    logger.warning(user)
+    logger.warning(user_credentails)
+
+    if not user:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = 'Invalid email')
     
-    @app.post(f"/{table}s/create", response_model=dict)
-    def create_entry(new_entry: model_class):
+    if not user_credentails.password == user[0][1]:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = 'Invalid password')
+    
 
-        table_instance = SqlHandler('e_commerce', table)
-        table_instance.insert_one(dict(new_entry))
-        return {"data": "user created successfully"} # raise to be implemented
+    token = u.create_access_token({'user_id': user[0][0]})
 
-
-# UPDATE
-
-def update_table(table:str):
-    model_class = globals()[table]
-
-    @app.put(f"/{table}/update")
-    def update_table(condition_col:str, condition_val:str, new_values: model_class):
-        condition = f'{condition_col} = {condition_val}'
-
-        handler = SqlHandler('e_commerce', table)
-        handler.update_table(condition, dict(new_values))
-        return {"message": f"Table {table} updated successfully."}
+    return {"access_token": token, "token_type": "bearer"}
 
 
 
-for table in tables:
-    select_n_rows(table) 
-    create_entry(table)
-    update_table(table)
+
+# GET endpoint to search porducts
+@app.get("/product/search", response_model=List[schemas.SearchProductOut], tags=['Default'])
+def search_products(product_name: Optional[str] = None, 
+                    brand: Optional[str] = None, 
+                    price: Optional[float] = None):
+    
+    handler = SqlHandler('e_commerce', 'product')
+    results = handler.search_products(product_name=product_name, 
+                                      brand=brand, 
+                                      price=price)
+    return results
 
 
+
+
+
+
+
+
+
+
+app.include_router(granted_user_required.router)
+app.include_router(auth_required.router)
