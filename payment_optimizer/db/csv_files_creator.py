@@ -1,16 +1,41 @@
 import os
 import pandas as pd
 import random
+from pathlib import Path
+from payment_optimizer.db.sql_interactions import logger
 from payment_optimizer.db.data_generator import (
             generate_User, generate_Product, generate_PaymentMethod, 
             generate_Rating, generate_TransactionProduct, generate_Transaction)
 
+
+
 NUMBER_OF_TRANSACTIONS = 5000
 NUMBER_OF_USERS = 2000
 NUMBER_OF_PRODUCTS = 1000
-current_directory = os.getcwd()
-#parent_directory = os.path.dirname(current_directory)
-target_directory = os.path.join(current_directory, 'data')
+
+
+# Get the current directory
+current_dir = Path.cwd()
+
+# Navigate up the directory tree until reaching "MarketingProject"
+while current_dir.name != "MarketingProject" and current_dir.parent != current_dir:
+    current_dir = current_dir.parent
+
+# Check if "MarketingProject" is found
+if current_dir.name == "MarketingProject":
+    print("Found 'MarketingProject' directory at:", current_dir)
+    target_directory = os.path.join(current_dir, 'data')
+
+else:
+    print("Directory 'MarketingProject' not found in the directory tree.")
+
+
+
+
+# Ensure target directory exists
+if not os.path.exists(target_directory):
+    os.makedirs(target_directory)
+
 
 # Function to write data to CSV file only if it doesn't exist
 def write_to_csv(data, csv_file_path):
@@ -21,6 +46,7 @@ user_data = [generate_User(user_id) for user_id in range(1, NUMBER_OF_USERS + 1)
 product_data = [generate_Product(product_id) for product_id in range(1, NUMBER_OF_PRODUCTS + 1)]
 PaymentMethod_data = [generate_PaymentMethod(payment_method_id) for payment_method_id in range(1, 5)]
 Rating_data = [generate_Rating(rating_id) for rating_id in range(1, 6)]
+
 
 # Write data to CSV files only if they don't exist
 write_to_csv(user_data, f'{target_directory}/user.csv')
@@ -41,6 +67,7 @@ for transaction_id in range(1, NUMBER_OF_TRANSACTIONS + 1):
     Transaction_data.append(generate_Transaction(transaction_id, user_id, payment_method_id, rating_id))
 
     TransactionProduct_data.append(TransactionProduct)
+
 
 write_to_csv(TransactionProduct_data, f'{target_directory}/TransactionProduct.csv')
 write_to_csv(Transaction_data, f'{target_directory}/Transaction.csv')

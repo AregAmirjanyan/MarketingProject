@@ -1,7 +1,9 @@
 from payment_optimizer.db import (              
-                                                #schema,
-                                                #csv_files_creator,
-                                                #basic_etl, 
+                                                
+                                                csv_files_creator,
                                                 logger, 
+                                                schema,
                                                 sql_interactions
                                                 )
+
+

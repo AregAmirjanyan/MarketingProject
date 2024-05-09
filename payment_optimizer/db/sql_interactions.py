@@ -10,7 +10,6 @@ from payment_optimizer.db.logger import CustomFormatter
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-#from payment_optimizer.db.schema import Base 
 
 
 
