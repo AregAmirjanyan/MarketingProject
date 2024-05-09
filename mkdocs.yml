@@ -6,6 +6,7 @@ nav:
   - API: API.md
   - DB: DB.md
   - Model: Model.md
+  - Logger: logger.md
 
 
 plugins:
