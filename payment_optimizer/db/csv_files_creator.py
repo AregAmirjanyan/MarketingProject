@@ -38,7 +38,17 @@ if not os.path.exists(target_directory):
 
 
 # Function to write data to CSV file only if it doesn't exist
-def write_to_csv(data, csv_file_path):
+def write_to_csv(data: list, csv_file_path: str) -> None:
+    """
+    Writes data to a CSV file if the file doesn't exist.
+
+    Args:
+        data (list): The data to be written to the CSV file.
+        csv_file_path (str): The path to the CSV file.
+
+    Returns:
+        None
+    """
     if not os.path.exists(csv_file_path):
         pd.DataFrame(data).to_csv(csv_file_path, index=False)
 

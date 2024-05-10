@@ -101,9 +101,12 @@ def initialize_database(db_file_path):
                 result_id = Column(Integer, primary_key=True) 
                 start_date = Column(DATE) 
                 end_date = Column(DATE) 
-                t_test = Column(Float) 
-                p_value = Column(Float) 
-                message = Column(String) 
+                t_test_AB = Column(Float) 
+                p_value_AB = Column(Float) 
+                message_AB_comparison = Column(String) 
+                t_test_BC = Column(Float) 
+                p_value_BC = Column(Float) 
+                message_BC_comparison = Column(String) 
                 test_date = Column(DATE)
             
             # Create a session

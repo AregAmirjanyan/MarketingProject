@@ -10,24 +10,76 @@ db_path = os.path.join(parent_dir, 'e_commerce')
 # Creating CRUD class
 
 class CRUD_Check():
+    """
+    Class to perform CRUD operations on a specified table in the database.
+
+    Attributes:
+        table (str): The name of the table in the database.
+        sql_handler (SqlHandler): An instance of SqlHandler for interacting with the database.
+    """
     def __init__(self, table: str):
+        """
+        Initializes the CRUD_Check object with the specified table name.
+
+        Args:
+            table (str): The name of the table.
+        """
         self.table = table
         self.sql_handler = SqlHandler(dbname=db_path, table_name=self.table)
 
-    def end_operation(self):
+    def end_operation(self)-> None:
+        """
+        Closes the connection to the database.
+        """
         return self.sql_handler.close_cnxn()
 
-    def create(self, data: dict):
+    def create(self, data: dict) -> None:
+        """
+        Creates a new record in the table with the provided data.
+
+        Args:
+            data (dict): A dictionary containing the data for the new record.
+        """
         return self.sql_handler.insert_many(df=pd.DataFrame([data]))
 
-    def read(self, chunksize: int, pk_name: str):
+    def read(self, chunksize: int, pk_name: str)-> None:
+        """
+        Reads records from the table.
+
+        Args:
+            chunksize (int): The number of rows to read at a time.
+            pk_name (str): The primary key name used for filtering.
+
+        Returns:
+            None
+        """
         print(self.sql_handler.from_sql_to_pandas(chunksize=chunksize, id_value=pk_name))
     
-    def update(self, condition: str, column_to_be_changed: str, new_value: str):
+    def update(self, condition: str, column_to_be_changed: str, new_value: str)-> None:
+        """
+        Updates records in the table based on the provided condition.
+
+        Args:
+            condition (str): The condition to filter records.
+            column_to_be_changed (str): The name of the column to be updated.
+            new_value (str): The new value to be set.
+
+        Returns:
+            None
+        """
         set_info = {column_to_be_changed: new_value}
         return self.sql_handler.update_table(condition=condition, new_values=set_info)
 
-    def delete(self, condition: str):
+    def delete(self, condition: str)-> None:
+        """
+        Deletes records from the table based on the provided condition.
+
+        Args:
+            condition (str): The condition to filter records for deletion.
+
+        Returns:
+            None
+        """
         return self.sql_handler.delete_record(condition=condition)
 
 
@@ -41,9 +93,9 @@ data_new_product = {
 
 test2 = CRUD_Check('product')
 test2.create(data_new_product)
-#test2.update("product_id = 1001", "product_name", "Iphone 15 PRO MAX")
-#test2.delete("product_id = 1002")
-#test2.read(100, 'product_id')
+test2.update("product_id = 1001", "product_name", "Iphone 15 PRO MAX")
+test2.delete("product_id = 1002")
+test2.read(100, 'product_id')
 test2.end_operation()
 
 
@@ -127,5 +179,19 @@ Garo = {
 }
 
 test1 = CRUD_Check('user')
-test1.create(Hovhannisyan)
+test1.create(Garo)
+test1.end_operation()
+
+
+Mari = {
+    'password': 'happyworld',
+    'first_name': 'Mari',
+    'last_name': 'Martikyan',
+    'phone_number': '+37498273856',
+    'email': 'marimari@gmail.com',
+    'db_view': "denied"
+}
+
+test1 = CRUD_Check('user')
+test1.create(Mari)
 test1.end_operation()
