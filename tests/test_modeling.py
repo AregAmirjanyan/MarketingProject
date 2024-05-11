@@ -1,6 +1,7 @@
 import os
 from payment_optimizer.modeling.models import *
 import pandas as pd
+from tests.test_transactions import CRUD_Check
 
 def run_ab_tests(data_connect: DatabaseConnector, start_date: str = None, end_date: str = None) -> dict:
     """
@@ -19,7 +20,7 @@ def run_ab_tests(data_connect: DatabaseConnector, start_date: str = None, end_da
     ab_test.perform_ab_test(start_date, end_date)
     return ab_test.get_results()
 
-def main()-> None:
+def model_test()-> None:
     """
     Main function to run A/B tests and save results.
     """
@@ -36,25 +37,11 @@ def main()-> None:
         {"name": "A/B Test with Start and End Date", "start_date": "04/02/2022", "end_date": "30/04/2023"}
     ]
 
-    results = []
     for case in test_cases:
-        print(f'---------------{case["name"]}')
         result = run_ab_tests(data_connect, case["start_date"], case["end_date"])
-        results.append(result)
+        AB_test = CRUD_Check('a_b_testing_results')
+        AB_test.create(result)
+        AB_test.end_operation()
 
-    # Save results to CSV and insert into database
-    a_b_testing_results = pd.DataFrame(results)
-    a_b_testing_results['result_id'] = range(1, len(a_b_testing_results) + 1)
-
-    data_path = os.path.join(parent_dir, 'data')
-    result_path = os.path.join(data_path, 'a_b_testing_results.csv')
-    a_b_testing_results.to_csv(result_path, index=False)
-
-    res_handler = SqlHandler(db_path, 'a_b_testing_results')
-    res_data = pd.read_csv(result_path)
-    res_handler.insert_many(res_data)
-    res_handler.close_cnxn()
-
-if __name__ == "__main__":
-    main()
+model_test()
 

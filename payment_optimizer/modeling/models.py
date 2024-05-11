@@ -206,6 +206,11 @@ class ABTesting():
         Returns:
             dict: A dictionary containing the test results.
         """
+        if self.first_date != None:
+            self.first_date = self.first_date.strftime('%Y-%m-%d')
+        if self.last_date != None:
+            self.last_date = self.last_date.strftime('%Y-%m-%d')
+
         results = {
             'start_date': self.first_date,
             'end_date': self.last_date,
@@ -215,6 +220,6 @@ class ABTesting():
             't_test_BC': self.t_stat_BC,
             'p_value_BC': self.p_value_BC,
             'message_BC_comparison': self.result_BC,
-            'test_date': datetime.now()
+            'test_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
         return results

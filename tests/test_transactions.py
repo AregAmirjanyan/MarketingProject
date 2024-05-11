@@ -83,22 +83,6 @@ class CRUD_Check():
         return self.sql_handler.delete_record(condition=condition)
 
 
-
-# Checking functionality on product table 
-data_new_product = {
-    "product_name": "Iphone 14",
-    "brand": "Apple",
-    "price": 1000
-}
-
-test2 = CRUD_Check('product')
-test2.create(data_new_product)
-test2.update("product_id = 1001", "product_name", "Iphone 15 PRO MAX")
-test2.delete("product_id = 1002")
-test2.read(100, 'product_id')
-test2.end_operation()
-
-
 # Adding group members, instructor, teaching associate as granted users
 
 Gayane = {
@@ -106,7 +90,7 @@ Gayane = {
     'first_name': 'Gayane',
     'last_name': 'Ohanjanyan',
     'phone_number': '+37493008900',
-    'email': 'gayaneohanjanyan@gmail.com',
+    'email': 'gayane_ohanjanyan@edu.aua.am',
     'db_view': "granted"
 }
 
@@ -119,7 +103,7 @@ Nane = {
     'first_name': 'Nane',
     'last_name': 'Mambreyan',
     'phone_number': '+37494233204',
-    'email': 'nanemambreyan@gmail.com',
+    'email': 'nane_mambreyan@edu.aua.am',
     'db_view': "granted"
 }
 
@@ -132,7 +116,7 @@ Hasmik = {
     'first_name': 'Hasmik',
     'last_name': 'Sahakyan',
     'phone_number': '+37491053492',
-    'email': 'hasmiksahakyan@gmail.com',
+    'email': 'hasmik_sahakyan@edu.aua.am',
     'db_view': "granted"
 }
 
@@ -146,7 +130,7 @@ Areg = {
     'first_name': 'Areg',
     'last_name': 'Amirjanyan',
     'phone_number': '+37498120376',
-    'email': 'aregamirjanyan@gmail.com',
+    'email': 'areg_amirjanyan@edu.aua.am',
     'db_view': "granted"
 }
 
@@ -160,7 +144,7 @@ Hovhannisyan = {
     'first_name': 'Karen',
     'last_name': 'Hovhannisyan',
     'phone_number': '+37494596123',
-    'email': 'karenhovhannisyan@gmail.com',
+    'email': 'khovhannisyan@aua.am',
     'db_view': "granted"
 }
 
@@ -174,24 +158,10 @@ Garo = {
     'first_name': 'Garo',
     'last_name': 'Bozadijan',
     'phone_number': '+37493123456',
-    'email': 'garobozadijan@gmail.com',
+    'email': 'garo_bozadjian18@alumni.aua.am',
     'db_view': "granted"
 }
 
 test1 = CRUD_Check('user')
 test1.create(Garo)
-test1.end_operation()
-
-
-Mari = {
-    'password': 'happyworld',
-    'first_name': 'Mari',
-    'last_name': 'Martikyan',
-    'phone_number': '+37498273856',
-    'email': 'marimari@gmail.com',
-    'db_view': "denied"
-}
-
-test1 = CRUD_Check('user')
-test1.create(Mari)
 test1.end_operation()
