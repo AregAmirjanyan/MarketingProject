@@ -3,10 +3,10 @@ from setuptools import setup, find_packages
  
 with open("requirements.txt") as f: 
     reqs = f.read().splitlines() 
- 
 
 setup( 
-    name="payment_optimizer", 
+    name="new2", 
+    version='1.0.0',
     description="Optimizing the payment process of e-commerce", 
     long_description=pathlib.Path("README.md").read_text(), 
     long_description_content_type="text/markdown", 
@@ -18,6 +18,7 @@ setup(
     python_requires=">=3.8.2, <3.12",  
     install_requires=reqs, 
     packages=find_packages(include=["Documents", "payment_optimizer", 'payment_optimizer.*', 'test', 'tests.*']), 
-    version = "1.0.0" 
- 
+    package_data={
+        '': ['DB.md', 'api.md', 'Model.md', 'logger.md'],  # Include specific documentation files
+    }
 )

@@ -3,6 +3,10 @@
 Payment Optimizer is a Python package designed to optimize the payment process of e-commerce websites doing A/B testing.
 
 
+Link to our Project in PyPi: https://pypi.org/project/new2/1.0.0/
+
+See the documentation of our Project here:  https://aregamirjanyan.github.io/MarketingProject/
+
 
 
 # Payment Optimizer
