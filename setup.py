@@ -18,6 +18,6 @@ setup(
     python_requires=">=3.8.2, <3.12",  
     install_requires=reqs, 
     packages=find_packages(include=["Documents", "payment_optimizer", 'payment_optimizer.*', 'test', 'tests.*']), 
-    version = "0.4.0" 
+    version = "1.0.0" 
  
 )

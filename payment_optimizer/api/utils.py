@@ -1,24 +1,39 @@
 from fastapi import HTTPException, status, Depends
 from payment_optimizer.db.sql_interactions import SqlHandler, logger
 from fastapi.security import OAuth2PasswordBearer
-#from . import endpoints as e
-#from . import app
 from jose import  jwt, JWTError
 from datetime import datetime, timedelta
 from . import schemas
 
+"""
+    This module contains utility functions used for user 
+    authentication and authorization within the PayOpt API.
+"""
 
+
+
+# Secret key for JWT encoding and decoding
 SECRET_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
 ALGO = 'HS256'
 ACCESS_TOKEN__EXPIRE_MINUTES = 30 
 
 
-
+# OAuth2 password bearer for token URL
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 
 
 def create_access_token(data: dict):
+    """
+    Create an access token with the provided data.
+
+    Args:
+        data (dict): Data to encode in the token.
+
+    Returns:
+        str: Encoded JWT access token.
+    """
+
     to_encode = data.copy()
 
     expire = datetime.now() + timedelta(minutes = ACCESS_TOKEN__EXPIRE_MINUTES)
@@ -31,9 +46,20 @@ def create_access_token(data: dict):
 
 
 def verify_access_token(token: str, credentials_exception):
+    """
+    Verify and decode the access token.
+
+    Args:
+        token (str): JWT access token.
+        credentials_exception (HTTPException): Exception to raise if credentials are invalid.
+
+    Returns:
+        schemas.TokenData: Decoded token data.
+    """
+
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGO])
-        id: str = payload['user_id']
+        id = payload['user_id']
 
         if id is None:
             raise credentials_exception
@@ -46,7 +72,19 @@ def verify_access_token(token: str, credentials_exception):
 
     return token_data
 
+
+
 def get_current_user(token: str = Depends(oauth2_scheme)):
+    """
+    Get the current user based on the provided access token.
+
+    Args:
+        token (str, optional): JWT access token. Defaults to Depends(oauth2_scheme).
+
+    Returns:
+        schemas.TokenData: Current user's token data.
+    """
+
     credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                           detail = 'Could not validate the credentials',
                                           headers = {'WWW-Authenticate': 'Bearer'})
@@ -54,7 +92,19 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
     return  verify_access_token(token, credentials_exception)
 
 
+
+
 def check_privilege(token: str = Depends(get_current_user)):
+    """
+    Check the privilege level of the current user.
+
+    Args:
+        token (str, optional): JWT access token. Defaults to Depends(get_current_user).
+
+    Returns:
+        str: Privilege level of the current user.
+    """
+
     if token.privilege != 'granted':
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Insufficient privileges')
     return token.privilege

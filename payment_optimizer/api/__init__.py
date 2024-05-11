@@ -1,1 +1,0 @@
-from payment_optimizer.api import endpoints

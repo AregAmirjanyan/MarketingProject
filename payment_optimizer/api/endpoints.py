@@ -1,9 +1,10 @@
+#################################### DENIED AND GRANTED VIEW ##########################################
+
 from fastapi import FastAPI, HTTPException, status, Depends
 from fastapi.security import  OAuth2PasswordRequestForm
 from typing import List
 from fastapi.responses import HTMLResponse
 from payment_optimizer.db.sql_interactions import SqlHandler, logger
-#from passlib.context import CryptContext
 from . import schemas
 from typing import Optional
 from . import utils as u
@@ -11,12 +12,17 @@ from . import granted_user_required
 from . import auth_required
 
 
+"""
+     Shared endpoints for users granted and not grantedusers with special permission. 
+     Permission is handled from user table db_view column
+"""
+ 
 
 
 app = FastAPI(title = 'PayOpt')
 
 
-
+# root 
 @app.get("/", response_class=HTMLResponse, tags=["Root"])
 async def read_root():
     return """
@@ -56,23 +62,33 @@ async def read_root():
             <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
         </head>
         <body>
-            <h1>Welcome to My API</h1>
+            <h1>Welcome to PayOpt API</h1>
             <a href="/docs" class="secondary-button">Swagger UI</a>
-            <a href="/redoc" class="secondary-button">ReDoc</a> <!-- Added Redoc button -->
+            <a href="/redoc" class="secondary-button">ReDoc</a> 
+            <a href="https://app.powerbi.com/groups/me/reports/1733eb14-e25c-482e-8d8a-6f7172727743/ReportSection?experie"
+ class="secondary-button">Report</a> 
+
+
         </body>
     </html>
     """
 
 
 
-
-
-
-
-
-
+# POST endpoint for LogIn 
 @app.post("/login", tags=['Default'])
 def login(user_credentails: OAuth2PasswordRequestForm = Depends()):
+    """
+    Endpoint for user login. Validates user credentials and 
+    returns an access token upon successful authentication.
+
+    Args:
+        user_credentials (OAuth2PasswordRequestForm): User's login credentials.
+
+    Returns:
+        dict: Access token and token type.
+    """
+
     handler = SqlHandler('e_commerce', 'user')
     user = handler.select_row('email', user_credentails.username)
     logger.warning(user)
@@ -99,6 +115,18 @@ def search_products(product_name: Optional[str] = None,
                     brand: Optional[str] = None, 
                     price: Optional[float] = None):
     
+    """
+    Endpoint to search for products based on product name, brand, and price.
+
+    Args:
+        product_name (str, optional): Name of the product to search for.
+        brand (str, optional): Brand of the product to search for.
+        price (float, optional): Maximum price of the product to search for.
+
+    Returns:
+        List[schemas.SearchProductOut]: List of products matching the search criteria.
+    """
+     
     handler = SqlHandler('e_commerce', 'product')
     results = handler.search_products(product_name=product_name, 
                                       brand=brand, 
