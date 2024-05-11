@@ -94,9 +94,12 @@ def login(user_credentails: OAuth2PasswordRequestForm = Depends()):
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = 'Invalid email')
     
     logger.warn(user_credentails.password)
+    logger.warn(user)
+    logger.warn(user[0])
     logger.warn(type(user[0][1]))
     logger.warn(user[0][1])
-    if not u.verify_password(user_credentails.password, user[0][1].decode('utf-8')):
+    pass_in_db =  bytes(user[0][1], encoding='utf-8')
+    if not u.verify_password(user_credentails.password, pass_in_db.decode('utf-8')):
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = 'Invalid password')
     
 

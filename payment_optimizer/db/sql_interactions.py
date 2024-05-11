@@ -5,6 +5,8 @@ import numpy as np
 import os
 from payment_optimizer.db.logger import CustomFormatter
 import bcrypt
+from concurrent.futures import ThreadPoolExecutor
+
 
 
 
@@ -174,22 +176,28 @@ class SqlHandler:
         existing_records = set(self.cursor.execute(existing_query).fetchall())
 
         # Filter out rows that already exist in the database
-        values_to_insert = [row for row in values if tuple(row) not in existing_records]
+        if 'password' in columns:
+            password_index = columns.index('password')
+            existing_records_filtered = {tuple(record[:password_index] + record[password_index+1:]) for record in existing_records}
+            values_to_insert = [row for row in values if tuple(row[:password_index] + row[password_index+1:]) not in existing_records_filtered]
+        else:
+            values_to_insert = [row for row in values if tuple(row) not in existing_records]
 
         if not values_to_insert:
             logger.warning('All rows already exist in the database. No new records inserted.')
             return
 
-        
+
         # Hash password column if it exists
         if 'password' in columns:
             password_index = columns.index('password')
+            passwords_to_hash = [row[password_index] for row in values_to_insert]
+            with ThreadPoolExecutor() as executor:
+                hashed_passwords = list(executor.map(hash_password, passwords_to_hash))
             for index, row in enumerate(values_to_insert):
-                hashed_password = bcrypt.hashpw(row[password_index].encode('utf-8'), bcrypt.gensalt())
                 row = list(row)
-                row[password_index] = hashed_password
+                row[password_index] = hashed_passwords[index]
                 values_to_insert[index] = tuple(row)
-        
 
         # Construct SQL query for insertion
         cols = ', '.join(columns)  # Comma-separated column names
