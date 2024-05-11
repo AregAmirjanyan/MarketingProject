@@ -168,7 +168,6 @@ while current_dir.name != "MarketingProject" and current_dir.parent != current_d
 
 # Check if "MarketingProject" is found
 if current_dir.name == "MarketingProject":
-    print("Found 'MarketingProject' directory at:", current_dir)
     db_file_path = current_dir / "e_commerce.db"
     initialize_database(db_file_path)
 else:

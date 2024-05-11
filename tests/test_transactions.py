@@ -53,7 +53,7 @@ class CRUD_Check():
         Returns:
             None
         """
-        print(self.sql_handler.from_sql_to_pandas(chunksize=chunksize, id_value=pk_name))
+        return(self.sql_handler.from_sql_to_pandas(chunksize=chunksize, id_value=pk_name))
     
     def update(self, condition: str, column_to_be_changed: str, new_value: str)-> None:
         """

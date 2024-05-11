@@ -4,6 +4,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import  jwt, JWTError
 from datetime import datetime, timedelta
 from . import schemas
+import bcrypt
 
 """
     This module contains utility functions used for user 
@@ -108,3 +109,39 @@ def check_privilege(token: str = Depends(get_current_user)):
     if token.privilege != 'granted':
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Insufficient privileges')
     return token.privilege
+
+
+
+
+def hash_password(password: str) -> str:
+    """
+    Hashes the provided password using bcrypt.
+
+    Args:
+        password (str): The password to be hashed.
+
+    Returns:
+        str: The hashed password.
+    """
+    # Hash the password
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    return hashed_password.decode('utf-8')
+
+
+
+def verify_password(password: str, hashed_password: str) -> bool:
+    """
+    Verifies if the provided password matches the hashed password.
+
+    Args:
+        password (str): The password to be verified.
+        hashed_password (str): The hashed password to compare against.
+
+    Returns:
+        bool: True if the password matches the hashed password, False otherwise.
+    """
+    # Encode the password as bytes
+    encoded_password = password.encode('utf-8')
+
+    # Verify the password
+    return bcrypt.checkpw(encoded_password, hashed_password.encode('utf-8'))

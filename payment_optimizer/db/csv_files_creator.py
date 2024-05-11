@@ -23,7 +23,6 @@ while current_dir.name != "MarketingProject" and current_dir.parent != current_d
 
 # Check if "MarketingProject" is found
 if current_dir.name == "MarketingProject":
-    print("Found 'MarketingProject' directory at:", current_dir)
     target_directory = os.path.join(current_dir, 'data')
 
 else:

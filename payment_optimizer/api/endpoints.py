@@ -21,7 +21,6 @@ from . import auth_required
 
 app = FastAPI(title = 'PayOpt')
 
-
 # root 
 @app.get("/", response_class=HTMLResponse, tags=["Root"])
 async def read_root():
@@ -65,13 +64,12 @@ async def read_root():
             <h1>Welcome to PayOpt API</h1>
             <a href="/docs" class="secondary-button">Swagger UI</a>
             <a href="/redoc" class="secondary-button">ReDoc</a> 
-            <a href="https://app.powerbi.com/groups/me/reports/1733eb14-e25c-482e-8d8a-6f7172727743/ReportSection?experie"
- class="secondary-button">Report</a> 
-
-
+            <a href="
+https://app.powerbi.com/reportEmbed?reportId=1733eb14-e25c-482e-8d8a-6f7172727743&autoAuth=true&ctid=4c0b7b5b-f6ee-4e4e-b961-0512d8fcb5f2" target="_blank" class="secondary-button">Report</a> 
         </body>
     </html>
     """
+
 
 
 
@@ -91,14 +89,14 @@ def login(user_credentails: OAuth2PasswordRequestForm = Depends()):
 
     handler = SqlHandler('e_commerce', 'user')
     user = handler.select_row('email', user_credentails.username)
-    logger.warning(user)
-    logger.warning(user_credentails)
 
     if not user:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = 'Invalid email')
     
-    logger.warning(user_credentails)
-    if not user_credentails.password == user[0][1]:
+    logger.warn(user_credentails.password)
+    logger.warn(type(user[0][1]))
+    logger.warn(user[0][1])
+    if not u.verify_password(user_credentails.password, user[0][1].decode('utf-8')):
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = 'Invalid password')
     
 

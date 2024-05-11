@@ -66,7 +66,7 @@ def create_entry(table:str, status_code = status.HTTP_201_CREATED):
 
                 table_instance = SqlHandler('e_commerce', table)
                 table_instance.insert_one(dict(new_entry))
-                return {"data": "entry created successfully"} # raise to be implemented
+                return {"data": "Entry created successfully"} # raise to be implemented
 
 
 # UPDATE endpoint to update a table

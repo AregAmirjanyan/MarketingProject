@@ -15,7 +15,6 @@ while current_dir.name != "MarketingProject" and current_dir.parent != current_d
 
 # Check if "MarketingProject" is found
 if current_dir.name == "MarketingProject":
-    print("Found 'MarketingProject' directory at:", current_dir)
     parent_dir = current_dir
 else:
     print("Directory 'MarketingProject' not found in the directory tree.")

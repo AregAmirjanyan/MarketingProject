@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import os
 from payment_optimizer.db.logger import CustomFormatter
-
+import bcrypt
 
 
 
@@ -19,6 +19,24 @@ ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
 ch.setFormatter(CustomFormatter())
 logger.addHandler(ch)
+
+
+
+def hash_password(password: str) -> str:
+    """
+    Hashes the provided password using bcrypt.
+
+    Args:
+        password (str): The password to be hashed.
+
+    Returns:
+        str: The hashed password.
+    """
+    # Hash the password
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    return hashed_password.decode('utf-8')
+
+
 
 class SqlHandler:
     """
@@ -49,10 +67,10 @@ class SqlHandler:
         """Close the database connection.
         """        
 
-        logger.info('commiting the changes')
+        #logger.info('commiting the changes')
         self.cursor.close()
         self.cnxn.close()
-        logger.info('the connection has been closed')
+        #logger.info('the connection has been closed')
 
     def insert_one(self, record: dict) -> None:
         """
@@ -63,6 +81,11 @@ class SqlHandler:
         """
         if not record:
             raise ValueError("Record dictionary cannot be empty")
+        
+        # Hash the password column if it exists
+        if 'password' in record:
+            record['password'] = bcrypt.hashpw(record['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
 
         # Construct the SQL query
         columns = ', '.join(record.keys())
@@ -70,13 +93,13 @@ class SqlHandler:
         query = f"INSERT INTO {self.table_name} ({columns}) VALUES ({placeholders})"
         
         # Log the SQL query for debugging
-        logger.info(f"Executing SQL query: {query}")
+        #logger.info(f"Executing SQL query: {query}")
 
         # Execute the query
         try:
             self.cursor.execute(query, list(record.values()))
             self.cnxn.commit()
-            logger.info("Record inserted successfully.")
+            #logger.info("Record inserted successfully.")
         except Exception as e:
             logger.error(f"Error inserting record: {e}")
             self.cnxn.rollback()
@@ -95,7 +118,7 @@ class SqlHandler:
         columns = self.cursor.fetchall()
         
         column_names = [col[1] for col in columns]
-        logger.info(f'the list of columns: {column_names}')
+        #logger.info(f'the list of columns: {column_names}')
         # self.cursor.close()
 
         return column_names
@@ -106,7 +129,7 @@ class SqlHandler:
     
         query=f"DROP TABLE IF EXISTS {self.table_name};"
         self.cursor.execute(query)
-        logging.info(f'the {self.table_name} is truncated')
+        logging.info(f'The {self.table_name} is truncated')
         # self.cursor.close()
 
     def drop_table(self):
@@ -114,14 +137,12 @@ class SqlHandler:
         """        
         
         query = f"DROP TABLE IF EXISTS {self.table_name};"
-        logging.info(query)
 
         self.cursor.execute(query)
 
         self.cnxn.commit()
 
-        logging.info(f"table '{self.table_name}' deleted.")
-        logger.debug('using drop table function')
+        logging.info(f"Table '{self.table_name}' deleted.")
     
     def insert_many(self, df: pd.DataFrame) -> None:
         """
@@ -137,8 +158,8 @@ class SqlHandler:
 
         # Filter out columns that exist in both DataFrame and SQL table
         sql_column_names = [i.lower() for i in self.get_table_columns()]
-        print("colsL", columns)
-        print(sql_column_names)
+        #print("colsL", columns)
+        #print(sql_column_names)
         columns = list(set(columns) & set(sql_column_names))
 
         # Prepare data for insertion
@@ -159,16 +180,16 @@ class SqlHandler:
             logger.warning('All rows already exist in the database. No new records inserted.')
             return
 
-        '''
+        
         # Hash password column if it exists
         if 'password' in columns:
             password_index = columns.index('password')
             for index, row in enumerate(values_to_insert):
-                hashed_password = pwd_context.hash(row[password_index])
+                hashed_password = bcrypt.hashpw(row[password_index].encode('utf-8'), bcrypt.gensalt())
                 row = list(row)
                 row[password_index] = hashed_password
                 values_to_insert[index] = tuple(row)
-        '''
+        
 
         # Construct SQL query for insertion
         cols = ', '.join(columns)  # Comma-separated column names
@@ -183,7 +204,7 @@ class SqlHandler:
         self.cursor.executemany(query, values_to_insert)
         self.cnxn.commit()
 
-        logger.warning('New records inserted into the database.')
+        #logger.warning('New records inserted into the database.')
 
 
     def is_table_empty(self) -> bool:
@@ -223,12 +244,12 @@ class SqlHandler:
                 LIMIT {chunksize} OFFSET {offset}
             """
             data = pd.read_sql_query(query,self.cnxn) 
-            logger.info(f'the shape of the chunk: {data.shape}')
+            #logger.info(f'the shape of the chunk: {data.shape}')
             dfs.append(data)
             offset += chunksize
             if len(dfs[-1]) < chunksize:
                 logger.warning('loading the data from SQL is finished')
-                logger.debug('connection is closed')
+                #logger.debug('connection is closed')
                 break
         df = pd.concat(dfs)
 
@@ -247,10 +268,14 @@ class SqlHandler:
         Returns:
             None
         """
-   
+
+        # Hash the password column if it exists
+        if 'password' in new_values:
+            new_values['password'] = bcrypt.hashpw(new_values['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
         set_clause = ', '.join([f"{key} = ?" for key in new_values.keys()])
 
-    # Constructing the UPDATE query
+        # Constructing the UPDATE query
         query = f"""
             UPDATE {self.table_name}
             SET {set_clause}
