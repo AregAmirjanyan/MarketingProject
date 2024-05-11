@@ -37,7 +37,7 @@ model_result = ab_test.perform_ab_test(start_date, end_date)
 ```
 
 ## Documentation
-For detailed documentation and usage examples, refer to the official [documentation](https://github.com/AregAmirjanyan/MarketingProject).  
+For detailed documentation and usage examples, refer to the official [documentation](https://aregamirjanyan.github.io/MarketingProject/).  
 Link to our Project in PyPi: [PyPi package:](https://pypi.org/project/new2/1.0.0/)
 
 ## License
