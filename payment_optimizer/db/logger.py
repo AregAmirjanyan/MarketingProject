@@ -1,9 +1,34 @@
 import logging
 class CustomFormatter(logging.Formatter):
-    
-    """ 
-        Custom formatter for Informative Logging
     """
+    Custom formatter for informative logging with colored output.
+
+    This formatter provides color-coded output based on the log level:
+    - DEBUG: Grey color
+    - INFO: Violet color
+    - WARNING: Yellow color
+    - ERROR: Red color
+    - CRITICAL: Bold red color
+
+    Parameters:
+        logging.Formatter: The base class for all logging formatters.
+
+    Attributes:
+        grey (str): ANSI escape code for grey color.
+        violet (str): ANSI escape code for violet color.
+        yellow (str): ANSI escape code for yellow color.
+        red (str): ANSI escape code for red color.
+        bold_red (str): ANSI escape code for bold red color.
+        reset (str): ANSI escape code to reset text color.
+        format (str): The logging format string.
+        FORMATS (dict): A dictionary mapping logging levels to color-coded format strings.
+
+    Methods:
+        format(record): Formats the log record with color-coded output.
+
+    """
+
+ 
     grey = "\x1b[38;20m"
     violet="\x1b[38;5;183m"
     yellow = "\x1b[33;20m"

@@ -34,6 +34,8 @@ files_dictionary = {
 
 
 for table_name, file_name in files_dictionary.items():
+    """  Loads data from CSV files into SQLite database tables.
+    """    
     csv_path = os.path.join(parent_dir, 'data', file_name)
     handler = SqlHandler(db_file_path, table_name)
     data = pd.read_csv(csv_path)

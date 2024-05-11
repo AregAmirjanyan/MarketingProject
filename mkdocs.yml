@@ -3,7 +3,7 @@ site_name: PayOpt
 
 nav:
   - Home: index.md
-  - API: API.md
+  - API: api.md
   - DB: DB.md
   - Model: Model.md
   - Logger: logger.md

@@ -18,20 +18,30 @@ from sqlalchemy.orm import sessionmaker, relationship
 
 
 def initialize_database(db_file_path):
+    """
+    Initializes the database.
+
+    Args:
+        db_file_path (str): The file path of the SQLite database.
+    """
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
     ch = logging.StreamHandler()
     ch.setLevel(logging.DEBUG)
     ch.setFormatter(CustomFormatter())
     logger.addHandler(ch)
+    
 
-    if not os.path.exists(db_file_path):
+    if not os.path.exists(db_file_path):   
         logger.warn(f"Database file does not exist, creating new database {db_file_path}")
         engine = create_engine(f'sqlite:///{db_file_path}')
         Base = declarative_base()
         
         try:
             class User(Base):
+                """
+                Represents the 'user' table in the database.
+                """
                 __tablename__ = "user"
 
                 user_id = Column(Integer, primary_key=True)
@@ -44,20 +54,31 @@ def initialize_database(db_file_path):
                 
                 
             class Rating(Base):
+                """
+                Represents the 'rating' table in the database.
+                """               
+                
                 __tablename__ = "rating"
 
                 rating_id = Column(Integer, primary_key=True)
                 description = Column(String)
+                
 
 
-            class PaymentMethod(Base):
+            class PaymentMethod(Base):        
+                """
+                Represents the 'payment_method' table in the database.
+                """        
                 __tablename__ = "payment_method"
 
                 payment_method_id = Column(Integer, primary_key=True)
                 method_name = Column(String)
 
 
-            class Transaction(Base):
+            class Transaction(Base):       
+                """
+                Represents the 'transactions' table in the database.
+                """         
                 __tablename__ = "transactions"
 
                 transaction_id = Column(Integer, primary_key=True)
@@ -72,8 +93,12 @@ def initialize_database(db_file_path):
                 r_user = relationship("User")
                 r_paymentmethod = relationship("PaymentMethod")
                 r_rating = relationship("Rating")
+                
 
             class Product(Base):
+                """
+                Represents the 'product' table in the database.
+                """
                 __tablename__ = "product"
 
                 product_id = Column(Integer, primary_key=True)
@@ -83,6 +108,9 @@ def initialize_database(db_file_path):
                 
 
             class TransactionProduct(Base):
+                """
+                Represents the 'transaction_product' table in the database.
+                """
                 __tablename__ = "transaction_product"
 
                 transaction_id = Column(Integer, ForeignKey('transactions.transaction_id'), primary_key=True)
@@ -96,17 +124,17 @@ def initialize_database(db_file_path):
 
 
             class ABTestingResults(Base): 
+                """
+                Represents the 'a_b_testing_results' table in the database.
+                """
                 __tablename__ = "a_b_testing_results" 
             
                 result_id = Column(Integer, primary_key=True) 
                 start_date = Column(DATE) 
                 end_date = Column(DATE) 
-                t_test_AB = Column(Float) 
-                p_value_AB = Column(Float) 
-                message_AB_comparison = Column(String) 
-                t_test_BC = Column(Float) 
-                p_value_BC = Column(Float) 
-                message_BC_comparison = Column(String) 
+                t_test = Column(Float) 
+                p_value = Column(Float) 
+                message = Column(String) 
                 test_date = Column(DATE)
             
             # Create a session
@@ -145,3 +173,5 @@ if current_dir.name == "MarketingProject":
     initialize_database(db_file_path)
 else:
     print("Directory 'MarketingProject' not found in the directory tree.")
+
+         
