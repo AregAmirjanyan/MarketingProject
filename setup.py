@@ -11,7 +11,7 @@ with open("docs_requirements.txt") as f:
 
 setup( 
     name="PayOpt", 
-    version='1.0.0',
+    version='1.0.2',
     description="Optimizing the payment process of e-commerce", 
     long_description=pathlib.Path("README.md").read_text(), 
     long_description_content_type="text/markdown", 
