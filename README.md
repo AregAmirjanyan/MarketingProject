@@ -27,7 +27,7 @@ To utilize the package effectively, ensure that the schema adheres to the follow
 You can install Payment Optimizer using pip:
 
 ```bash
-pip install pay_opt
+pip install PayOpt
 ```
 
 ## Usage
@@ -35,7 +35,7 @@ pip install pay_opt
 Below is a basic example demonstrating how to utilize certain functions from the package:
 
 ```python
-from pay_opt.models import ABTesting
+from PayOpt.models import ABTesting
 
 ab_test = ABTesting(data_connect)
 ab_test.preprocess_data()
@@ -82,7 +82,7 @@ model_result = ab_test.perform_ab_test(start_date, end_date)
 ## Documentation
 
 For detailed documentation and usage examples, refer to the official [documentation](https://aregamirjanyan.github.io/MarketingProject/).
-Link to our Project in PyPi: [PyPi package:](https://pypi.org/project/PayOpt/1.0.2/)
+Link to our Project in PyPi: [PyPi package:](https://pypi.org/project/PayOpt/1.0.0/)
 
 ## License
 
