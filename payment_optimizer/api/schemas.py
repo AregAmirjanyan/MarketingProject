@@ -44,7 +44,7 @@ class transactions(BaseModel):
     status: str
     type: Optional[str] = None
     shipping_address: Optional[str] = None
-    explored_bandit_type: Literal['bandit A', 'bandit B'] 
+    explored_bandit_type: Literal['bandit A', 'bandit B', 'bandit C'] 
     
 
 class product(BaseModel):

@@ -128,7 +128,7 @@ def update_transaction(transaction_id: int,
         
      # If bandit is not available, choose a random bandit type
      if not bandit:
-          bandit = random.choice(['bandit A', 'bandit B'])
+          bandit = random.choice(['bandit A', 'bandit B', 'bandit C'])
 
      payment_methods = ['Debit Card', 'PayPal', 'Cash', 'Credit Card']
      ratings = ['bad', 'normal', 'good', 'perfect', 'terrible']
@@ -183,7 +183,7 @@ def create_transaction(
      handler = SqlHandler('e_commerce', 'transactions')
 
      # Choose a random bandit type
-     bandit = random.choice(['bandit A', 'bandit B'])
+     bandit = random.choice(['bandit A', 'bandit B', 'bandit C'])
 
      payment_methods = ['Debit Card', 'PayPal', 'Cash', 'Credit Card']
      ratings = ['bad', 'normal', 'good', 'perfect', 'terrible']
